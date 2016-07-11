@@ -35580,6 +35580,27 @@ module.exports = warning;
 },{"_process":24}],235:[function(require,module,exports){
 var React = require('react');
 var TextInput = require('./common/TextInput')
+var Link = require('react-router').Link;
+var hashHistory = require("react-router").hashHistory
+
+var FinancePlan = React.createClass({displayName: "FinancePlan",
+
+	render: function () {
+		return (
+			React.createElement("div", null, 
+				"FinancePlan"
+			)
+		)
+	}
+})
+
+module.exports = FinancePlan;
+
+},{"./common/TextInput":239,"react":232,"react-router":56}],236:[function(require,module,exports){
+var React = require('react');
+var TextInput = require('./common/TextInput')
+var Link = require('react-router').Link;
+var hashHistory = require("react-router").hashHistory
 
 var Index = React.createClass({displayName: "Index",
 	getInitialState: function () {
@@ -35596,11 +35617,17 @@ var Index = React.createClass({displayName: "Index",
 		var value = event.target.value;
 		var newText = Object.assign({}, this.state.todo);
 
-		newTodo[field] = value;
+		newText[field] = value;
 
 		this.setState({
 			text: newText
 		})
+	},
+	link: function () {
+		hashHistory.push("/signup")
+	},
+	showEnd: function () {
+		hashHistory.push("/FinancePlan");
 	},
 	render: function () {
 		return (
@@ -35620,9 +35647,9 @@ var Index = React.createClass({displayName: "Index",
 					error: this.state.errors.password}
 				), 
 				React.createElement("hr", null), 
-				React.createElement("button", null, "Sign Up"), 
+				React.createElement("button", {onClick: this.link}, "Sign Up"), 
 				React.createElement("br", null), 
-				React.createElement("button", null, "✔")
+				React.createElement("button", {onClick: this.showEnd}, "✔")
 			)
 		)
 	}
@@ -35630,7 +35657,82 @@ var Index = React.createClass({displayName: "Index",
 
 module.exports = Index;
 
-},{"./common/TextInput":237,"react":232}],236:[function(require,module,exports){
+},{"./common/TextInput":239,"react":232,"react-router":56}],237:[function(require,module,exports){
+var React = require('react');
+var TextInput = require('./common/TextInput')
+var Link = require('react-router').Link;
+var hashHistory = require("react-router").hashHistory
+
+var SignUp = React.createClass({displayName: "SignUp",
+	getInitialState: function () {
+		return {
+			errors: {},
+			text: {
+				fname: '',
+				lname: '',
+				email: '',
+				password: ''
+			}
+		}
+	},
+	saveTodoState: function (event) {
+		var field = event.target.name;
+		var value = event.target.value;
+		var newText = Object.assign({}, this.state.todo);
+
+		newText[field] = value;
+
+		this.setState({
+			text: newText
+		})
+	},
+	link: function () {
+		hashHistory.push("/signup")
+	},
+	showEnd: function () {
+		hashHistory.push("/FinancePlan");
+	},
+	render: function () {
+		return (
+			React.createElement("div", null, 
+				React.createElement(TextInput, {
+					name: "fname", 
+					placeholder: "First Name", 
+					value: this.state.text.fname, 
+					saveTodoState: this.saveTodoState, 
+					error: this.state.errors.fname}
+				), 
+				React.createElement(TextInput, {
+					name: "lname", 
+					placeholder: "Last Name", 
+					value: this.state.text.lname, 
+					saveTodoState: this.saveTodoState, 
+					error: this.state.errors.lname}
+				), 
+				React.createElement(TextInput, {
+					name: "email", 
+					placeholder: "Email", 
+					value: this.state.text.email, 
+					saveTodoState: this.saveTodoState, 
+					error: this.state.errors.email}
+				), 
+				React.createElement(TextInput, {
+					name: "password", 
+					placeholder: "Password", 
+					value: this.state.text.password, 
+					saveTodoState: this.saveTodoState, 
+					error: this.state.errors.password}
+				), 
+				React.createElement("hr", null), 
+				React.createElement("button", {onClick: this.showEnd}, "✔")
+			)
+		)
+	}
+})
+
+module.exports = SignUp;
+
+},{"./common/TextInput":239,"react":232,"react-router":56}],238:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35650,7 +35752,7 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"react":232}],237:[function(require,module,exports){
+},{"react":232}],239:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35685,7 +35787,7 @@ var TextInput = React.createClass({displayName: "TextInput",
 
 module.exports = TextInput;
 
-},{"react":232}],238:[function(require,module,exports){
+},{"react":232}],240:[function(require,module,exports){
 'use strict';
 
 
@@ -35705,7 +35807,7 @@ ReactDOM.render(
 	, document.getElementById('app')
 );
 
-},{"./routes":239,"jquery":22,"react":232,"react-dom":26,"react-router":56}],239:[function(require,module,exports){
+},{"./routes":241,"jquery":22,"react":232,"react-dom":26,"react-router":56}],241:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35713,13 +35815,17 @@ var Route = require('react-router').Route;
 var IndexRoute = require('react-router').IndexRoute;
 var Index = require('./components/Index');
 var App = require('./components/app')
+var SignUp = require("./components/SignUp")
+var FinancePlan = require("./components/FinancePlan")
 
 var routes = (
 	React.createElement(Route, {path: "/", component: App}, 
-		React.createElement(IndexRoute, {component: Index})
+		React.createElement(IndexRoute, {component: Index}), 
+		React.createElement(Route, {path: "/signup", component: SignUp}), 
+		React.createElement(Route, {path: "/financeplan", component: FinancePlan})
 	)
 );
 
 module.exports = routes;
 
-},{"./components/Index":235,"./components/app":236,"react":232,"react-router":56}]},{},[238]);
+},{"./components/FinancePlan":235,"./components/Index":236,"./components/SignUp":237,"./components/app":238,"react":232,"react-router":56}]},{},[240]);

@@ -1,5 +1,7 @@
 var React = require('react');
 var TextInput = require('./common/TextInput')
+var Link = require('react-router').Link;
+var hashHistory = require("react-router").hashHistory
 
 var Index = React.createClass({
 	getInitialState: function () {
@@ -16,11 +18,17 @@ var Index = React.createClass({
 		var value = event.target.value;
 		var newText = Object.assign({}, this.state.todo);
 
-		newTodo[field] = value;
+		newText[field] = value;
 
 		this.setState({
 			text: newText
 		})
+	},
+	link: function () {
+		hashHistory.push("/signup")
+	},
+	showEnd: function () {
+		hashHistory.push("/FinancePlan");
 	},
 	render: function () {
 		return (
@@ -40,9 +48,9 @@ var Index = React.createClass({
 					error={this.state.errors.password}
 				/>
 				<hr />
-				<button>Sign Up</button>
+				<button onClick={this.link} >Sign Up</button>
 				<br />
-				<button>&#10004;</button>
+				<button onClick={this.showEnd} >&#10004;</button>
 			</div>
 		)
 	}
