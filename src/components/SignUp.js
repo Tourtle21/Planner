@@ -11,14 +11,14 @@ var SignUp = React.createClass({
 				fname: '',
 				lname: '',
 				email: '',
-				password: ''
+				password: '',
 			}
 		}
 	},
 	saveTodoState: function (event) {
 		var field = event.target.name;
 		var value = event.target.value;
-		var newText = Object.assign({}, this.state.todo);
+		var newText = Object.assign({}, this.state.text);
 
 		newText[field] = value;
 

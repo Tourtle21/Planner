@@ -35579,16 +35579,118 @@ module.exports = warning;
 }).call(this,require('_process'))
 },{"_process":24}],235:[function(require,module,exports){
 var React = require('react');
-var TextInput = require('./common/TextInput')
 var Link = require('react-router').Link;
 var hashHistory = require("react-router").hashHistory
+var FinanceManager = require('./common/FinanceManager')
 
 var FinancePlan = React.createClass({displayName: "FinancePlan",
 
+	getInitialState: function () {
+		return{
+			incomes: [{
+				id: 0,
+				type: "Job",
+				amount: 800
+			},
+			{
+				id: 1,
+				type: "Alowence",
+				amount: 1500
+			},
+			{
+				id: 2,
+				type: "Investment",
+				amount: 50
+			}],
+			expenses: [{
+				id: 0,
+				type: "House Payment",
+				amount: 550
+			},
+			{
+				id: 1,
+				type: "Phone Bills",
+				amount: 100
+			},
+			{
+				id: 2,
+				type: "Groceries",
+				amount: 75
+			}],
+			totals: {
+				total: 0,
+				diff: 0,
+				netIncome: 0,
+			}
+		}
+	},
+	saveTodoState: function (id,type, event) {
+		console.log(id)
+		var field = event.target.name;
+		var value = event.target.value;
+		var type = type;
+		if (field == "incomes") {
+			var newText = this.state.incomes;
+			newText[id][type] = value;
+			this.setState({
+				incomes: newText
+			})
+			this.update()
+		} else {
+			var newText = this.state.expenses;
+			newText[id][type] = value;
+			console.log(newText)
+			this.setState({
+				expenses: newText
+			})
+			this.update()
+		}
+
+		
+
+		
+	},
+	update: function () {
+		var sum = 0;
+		var expense = 0;
+		for (var i = 0; i <= this.state.incomes.length -1; i++) {
+			sum += Number(this.state.incomes[i].amount)
+		}
+		for (var i = 0; i <= this.state.expenses.length -1; i++) {
+			expense += Number(this.state.expenses[i].amount)
+		}
+		this.setState({
+				totals: {
+				total:	sum,
+				diff: expense,
+				netIncome: sum - expense
+			}
+		})
+	},
+	componentWillMount: function () {
+		this.update()
+	},
 	render: function () {
+		console.log(this.state.expenses)
+		var total = this.state.totals.total
+		var difference = this.state.totals.diff
 		return (
 			React.createElement("div", null, 
-				"FinancePlan"
+				React.createElement(FinanceManager, {
+					name: "incomes", 
+					title: "Income", 
+					incomes: this.state.incomes, 
+					total: total, 
+					saveTodoState: this.saveTodoState}
+				), 
+				React.createElement(FinanceManager, {
+					name: "expenses", 
+					title: "expenses", 
+					expenses: this.state.expenses, 
+					total: difference, 
+					saveTodoState: this.saveTodoState}
+				), 
+				React.createElement("div", null, " ", this.state.totals.netIncome, " ")
 			)
 		)
 	}
@@ -35596,7 +35698,7 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 
 module.exports = FinancePlan;
 
-},{"./common/TextInput":239,"react":232,"react-router":56}],236:[function(require,module,exports){
+},{"./common/FinanceManager":239,"react":232,"react-router":56}],236:[function(require,module,exports){
 var React = require('react');
 var TextInput = require('./common/TextInput')
 var Link = require('react-router').Link;
@@ -35615,7 +35717,7 @@ var Index = React.createClass({displayName: "Index",
 	saveTodoState: function (event) {
 		var field = event.target.name;
 		var value = event.target.value;
-		var newText = Object.assign({}, this.state.todo);
+		var newText = Object.assign({}, this.state.text);
 
 		newText[field] = value;
 
@@ -35657,7 +35759,7 @@ var Index = React.createClass({displayName: "Index",
 
 module.exports = Index;
 
-},{"./common/TextInput":239,"react":232,"react-router":56}],237:[function(require,module,exports){
+},{"./common/TextInput":240,"react":232,"react-router":56}],237:[function(require,module,exports){
 var React = require('react');
 var TextInput = require('./common/TextInput')
 var Link = require('react-router').Link;
@@ -35671,14 +35773,14 @@ var SignUp = React.createClass({displayName: "SignUp",
 				fname: '',
 				lname: '',
 				email: '',
-				password: ''
+				password: '',
 			}
 		}
 	},
 	saveTodoState: function (event) {
 		var field = event.target.name;
 		var value = event.target.value;
-		var newText = Object.assign({}, this.state.todo);
+		var newText = Object.assign({}, this.state.text);
 
 		newText[field] = value;
 
@@ -35732,7 +35834,7 @@ var SignUp = React.createClass({displayName: "SignUp",
 
 module.exports = SignUp;
 
-},{"./common/TextInput":239,"react":232,"react-router":56}],238:[function(require,module,exports){
+},{"./common/TextInput":240,"react":232,"react-router":56}],238:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35753,6 +35855,71 @@ var App = React.createClass({displayName: "App",
 module.exports = App;
 
 },{"react":232}],239:[function(require,module,exports){
+var React = require('react');
+var Link = require('react-router').Link;
+var hashHistory = require("react-router").hashHistory
+var TextInput = require("./TextInput")
+var FinancePlan = React.createClass({displayName: "FinancePlan",
+
+	
+
+
+	render: function () {
+		var amount = 0;
+
+		var createTodoRow = function (incomes) {
+			amount += incomes.amount
+			return (
+				React.createElement("tr", {key: incomes.amount * incomes.id}, 
+					React.createElement("td", null, " ", React.createElement(TextInput, {
+						value: incomes.type, 
+						name: this.props.name, 
+						onChange: this.props.saveTodoState.bind(null, incomes.id, "type")}
+						)
+						), 
+					React.createElement("td", null, 
+						React.createElement(TextInput, {
+							value: incomes.amount, 
+							name: this.props.name, 
+							onChange: this.props.saveTodoState.bind(null, incomes.id, "amount")}
+						)
+					)
+				)
+			);
+		}
+		if (this.props.title == "Income"){
+			var output = this.props.incomes.map(createTodoRow, this)
+		} else {
+			var output = this.props.expenses.map(createTodoRow, this)
+		}
+		return (
+			React.createElement("div", null, 
+				React.createElement("h1", null, this.props.title), 
+				React.createElement("table", null, 
+					React.createElement("thead", null, 
+						React.createElement("tr", null, 
+							React.createElement("th", null, "Type of ", this.props.title), 
+							React.createElement("th", null, "Amount")
+						)
+					), 
+					React.createElement("tbody", null, 
+						output
+					)
+				), 
+			React.createElement("div", null, 
+				this.props.total
+			)
+
+					
+
+			)
+		)
+	}
+})
+
+module.exports = FinancePlan;
+
+},{"./TextInput":240,"react":232,"react-router":56}],240:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35776,7 +35943,7 @@ var TextInput = React.createClass({displayName: "TextInput",
 						placeholder: this.props.placeholder, 
 						ref: this.props.name, 
 						value: this.props.value, 
-						onChange: this.props.saveTodoState}
+						onChange: this.props.onChange}
 					), 
 					React.createElement("div", null, this.props.error)
 				)
@@ -35787,7 +35954,7 @@ var TextInput = React.createClass({displayName: "TextInput",
 
 module.exports = TextInput;
 
-},{"react":232}],240:[function(require,module,exports){
+},{"react":232}],241:[function(require,module,exports){
 'use strict';
 
 
@@ -35807,7 +35974,7 @@ ReactDOM.render(
 	, document.getElementById('app')
 );
 
-},{"./routes":241,"jquery":22,"react":232,"react-dom":26,"react-router":56}],241:[function(require,module,exports){
+},{"./routes":242,"jquery":22,"react":232,"react-dom":26,"react-router":56}],242:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35828,4 +35995,4 @@ var routes = (
 
 module.exports = routes;
 
-},{"./components/FinancePlan":235,"./components/Index":236,"./components/SignUp":237,"./components/app":238,"react":232,"react-router":56}]},{},[240]);
+},{"./components/FinancePlan":235,"./components/Index":236,"./components/SignUp":237,"./components/app":238,"react":232,"react-router":56}]},{},[241]);

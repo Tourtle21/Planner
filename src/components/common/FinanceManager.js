@@ -1,7 +1,7 @@
 var React = require('react');
 var Link = require('react-router').Link;
 var hashHistory = require("react-router").hashHistory
-
+var TextInput = require("./TextInput")
 var FinancePlan = React.createClass({
 
 	
@@ -13,9 +13,20 @@ var FinancePlan = React.createClass({
 		var createTodoRow = function (incomes) {
 			amount += incomes.amount
 			return (
-				<tr key={incomes.id}>
-					<td>{incomes.type}</td>
-					<td>{incomes.amount}</td>
+				<tr key={incomes.amount * incomes.id}>
+					<td> <TextInput
+						value={incomes.type}
+						name={this.props.name}
+						onChange={this.props.saveTodoState.bind(null, incomes.id, "type")}
+						/>
+						</td>
+					<td>
+						<TextInput
+							value={incomes.amount}
+							name={this.props.name}
+							onChange={this.props.saveTodoState.bind(null, incomes.id, "amount")}
+						/> 
+					</td>
 				</tr>
 			);
 		}
@@ -39,7 +50,7 @@ var FinancePlan = React.createClass({
 					</tbody>
 				</table>
 			<div>
-				{amount}
+				{this.props.total}
 			</div>
 
 					
