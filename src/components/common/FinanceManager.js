@@ -13,7 +13,7 @@ var FinancePlan = React.createClass({
 		var createTodoRow = function (incomes) {
 			amount += incomes.amount
 			return (
-				<tr key={incomes.amount * incomes.id}>
+				<tr key={Math.random()}>
 					<td> <TextInput
 						value={incomes.type}
 						name={this.props.name}

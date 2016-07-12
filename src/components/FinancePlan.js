@@ -2,41 +2,14 @@ var React = require('react');
 var Link = require('react-router').Link;
 var hashHistory = require("react-router").hashHistory
 var FinanceManager = require('./common/FinanceManager')
-
+var ItemStore = require('../stores/itemStore')
+var ItemActionCreator = require('../actions/ItemActionCreator')
 var FinancePlan = React.createClass({
 
 	getInitialState: function () {
 		return{
-			incomes: [{
-				id: 0,
-				type: "Job",
-				amount: 800
-			},
-			{
-				id: 1,
-				type: "Alowence",
-				amount: 1500
-			},
-			{
-				id: 2,
-				type: "Investment",
-				amount: 50
-			}],
-			expenses: [{
-				id: 0,
-				type: "House Payment",
-				amount: 550
-			},
-			{
-				id: 1,
-				type: "Phone Bills",
-				amount: 100
-			},
-			{
-				id: 2,
-				type: "Groceries",
-				amount: 75
-			}],
+			incomes: [],
+			expenses: [],
 			totals: {
 				total: 0,
 				diff: 0,
@@ -45,24 +18,18 @@ var FinancePlan = React.createClass({
 		}
 	},
 	saveTodoState: function (id,type, event) {
-		console.log(id)
 		var field = event.target.name;
 		var value = event.target.value;
 		var type = type;
 		if (field == "incomes") {
 			var newText = this.state.incomes;
 			newText[id][type] = value;
-			this.setState({
-				incomes: newText
-			})
+			ItemActionCreator.updateItem(newText[id], "income")
 			this.update()
 		} else {
 			var newText = this.state.expenses;
 			newText[id][type] = value;
-			console.log(newText)
-			this.setState({
-				expenses: newText
-			})
+			ItemActionCreator.updateItem(newText[id], "expense")
 			this.update()
 		}
 
@@ -83,15 +50,20 @@ var FinancePlan = React.createClass({
 				totals: {
 				total:	sum,
 				diff: expense,
-				netIncome: sum - expense
+				netIncome: sum - expense,
+				incomes: ItemStore.getAllIncomes(),
+				expenses: ItemStore.getAllExpenses()
 			}
 		})
 	},
 	componentWillMount: function () {
+		this.setState({
+			incomes: ItemStore.getAllIncomes(),
+			expenses: ItemStore.getAllExpenses()
+		})
 		this.update()
 	},
 	render: function () {
-		console.log(this.state.expenses)
 		var total = this.state.totals.total
 		var difference = this.state.totals.diff
 		return (
