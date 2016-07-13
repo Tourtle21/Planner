@@ -3,7 +3,11 @@
 var Dispatcher = require('../dispatcher/Dispatcher')
 var EventEmitter = require('events');
 var _ = require('lodash');
-
+var goal = {
+	goal: 0,
+	months: 0,
+	net: 0
+}
 var _items = [
 			[{
 				id: 0,
@@ -55,31 +59,47 @@ var ItemStore = Object.assign({}, EventEmitter.prototype, {
 	},
 	getAllExpenses: function () {
 		return _items[1];
+	},
+	getGoal: function () {
+		return goal.goal;
+	},
+	getMonths: function () {
+		return goal.months;
+	},
+	getNet: function () {
+		return goal.net;
 	}
 })
 
 Dispatcher.register(function (action, type) {
 	switch (action.actionType) {
 		case "create":
-		if (type == "income") {
-			_items[0].push(action.item);
-		}	else {
-			_items[1].push(action.item);
-		}
+		console.log(action.type)
+		console.log(_items[0])
+		_items[action.type].push({
+			id: _items[action.type].length,
+			type: "type",
+			amount: 0
+		})
 		
 		// ItemStore.emitChange();
 		break;
 		case "update":
-		if (type == "income") {
+		if (action.type == "income") {
 			var index = 0;
 		}
 		else {
 			var index = 1;
 		}
-		var existingItem = _.find(_items[index], {_id: action.item.id})
+		var existingItem = _.find(_items[index], {id: action.item.id})
 		var existingItemIndex = _.indexOf(_items[index], existingItem);
 		_items[index].splice(existingItemIndex, 1, action.item)
 		// ItemStore.emitChange();
+		break;
+		case "goal":
+		goal.goal = action.goal
+		goal.months = action.months
+		goal.net = action.net
 		break;
 		
 	}

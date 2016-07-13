@@ -4,6 +4,8 @@ var hashHistory = require("react-router").hashHistory
 var FinanceManager = require('./common/FinanceManager')
 var ItemStore = require('../stores/itemStore')
 var ItemActionCreator = require('../actions/ItemActionCreator')
+var DropBox = require("./common/DropBox")
+var TextInput = require("./common/TextInput")
 var FinancePlan = React.createClass({
 
 	getInitialState: function () {
@@ -14,14 +16,17 @@ var FinancePlan = React.createClass({
 				total: 0,
 				diff: 0,
 				netIncome: 0,
-			}
+			},
 		}
 	},
 	saveTodoState: function (id,type, event) {
 		var field = event.target.name;
 		var value = event.target.value;
 		var type = type;
-		if (field == "incomes") {
+		if (field == "goal") {
+			console.log("hi")
+		}
+		else if (field == "incomes") {
 			var newText = this.state.incomes;
 			newText[id][type] = value;
 			ItemActionCreator.updateItem(newText[id], "income")
@@ -63,17 +68,40 @@ var FinancePlan = React.createClass({
 		})
 		this.update()
 	},
+	createNew: function (turn) {
+		var number = 0;
+		if (turn == "expenses") {
+			number = 1;
+		}
+		ItemActionCreator.createItem(number)
+		this.update();
+	},
+	link: function () {
+		console.log()
+		ItemActionCreator.setGoal(document.getElementsByName("goal")[0].value, document.getElementsByTagName("select")[0].value, this.state.totals.netIncome)
+		hashHistory.push("/projections")
+	},
 	render: function () {
 		var total = this.state.totals.total
 		var difference = this.state.totals.diff
 		return (
 			<div>
+				<div>
+					How much would you like to save in <DropBox />
+					<TextInput 
+						name="goal"
+						placeholder='goal amount'
+						value={this.state.text}
+						onChange={this.state.saveTodoState}
+					/>
+				</div>
 				<FinanceManager
 					name= "incomes"
 					title= "Income"
 					incomes= {this.state.incomes}
 					total= {total}
 					saveTodoState = {this.saveTodoState}
+					createNew = {this.createNew}
 				/>
 				<FinanceManager
 					name= "expenses"
@@ -81,8 +109,10 @@ var FinancePlan = React.createClass({
 					expenses= {this.state.expenses}
 					total= {difference}
 					saveTodoState = {this.saveTodoState}
+					createNew = {this.createNew}
 				/>
 				<div> {this.state.totals.netIncome} </div>
+				<button onClick={this.link}>Calculate</button>
 			</div>
 		)
 	}

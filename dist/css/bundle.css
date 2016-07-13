@@ -210,3 +210,12 @@ button.toast-close-button {
     width: 25em;
   }
 }
+
+canvas {
+	width: 100% !important;
+    max-width: 400px;
+    height: auto !important;
+}
+select {
+	display: inline-block;
+}

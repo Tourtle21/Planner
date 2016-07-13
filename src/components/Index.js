@@ -37,14 +37,14 @@ var Index = React.createClass({
 					name="email"
 					placeholder="EMAIL"
 					value={this.state.text.email}
-					saveTodoState={this.saveTodoState}
+					onChange={this.saveTodoState}
 					error={this.state.errors.email}
 				/>
 				<TextInput 
 					name="password"
 					placeholder="Password"
 					value={this.state.text.password}
-					saveTodoState={this.saveTodoState}
+					onChange={this.saveTodoState}
 					error={this.state.errors.password}
 				/>
 				<hr />

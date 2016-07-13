@@ -39,28 +39,28 @@ var SignUp = React.createClass({
 					name="fname"
 					placeholder="First Name"
 					value={this.state.text.fname}
-					saveTodoState={this.saveTodoState}
+					onChange={this.saveTodoState}
 					error={this.state.errors.fname}
 				/>
 				<TextInput 
 					name="lname"
 					placeholder="Last Name"
 					value={this.state.text.lname}
-					saveTodoState={this.saveTodoState}
+					onChange={this.saveTodoState}
 					error={this.state.errors.lname}
 				/>
 				<TextInput 
 					name="email"
 					placeholder="Email"
 					value={this.state.text.email}
-					saveTodoState={this.saveTodoState}
+					onChange={this.saveTodoState}
 					error={this.state.errors.email}
 				/>
 				<TextInput 
 					name="password"
 					placeholder="Password"
 					value={this.state.text.password}
-					saveTodoState={this.saveTodoState}
+					onChange={this.saveTodoState}
 					error={this.state.errors.password}
 				/>
 				<hr />
