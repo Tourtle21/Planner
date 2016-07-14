@@ -1,6 +1,6 @@
 var React = require('react');
 var Link = require('react-router').Link;
-var hashHistory = require("react-router").hashHistory
+var browserHistory = require("react-router").browserHistory
 var FinanceManager = require('./common/FinanceManager')
 var ItemStore = require('../stores/itemStore')
 var ItemActionCreator = require('../actions/ItemActionCreator')
@@ -87,7 +87,7 @@ var FinancePlan = React.createClass({
 	},
 	link: function () {
 		ItemActionCreator.setGoal(document.getElementsByName("goal")[0].value, document.getElementsByTagName("select")[0].value, this.state.totals.netIncome)
-		hashHistory.push("/projections")
+		browserHistory.push("/projections")
 	},
 	render: function () {
 		var total = this.state.totals.total

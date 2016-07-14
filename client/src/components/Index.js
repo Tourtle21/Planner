@@ -1,7 +1,7 @@
 var React = require('react');
 var TextInput = require('./common/TextInput')
 var Link = require('react-router').Link;
-var hashHistory = require("react-router").hashHistory
+var browserHistory = require("react-router").browserHistory
 
 var Index = React.createClass({
 	getInitialState: function () {
@@ -25,10 +25,10 @@ var Index = React.createClass({
 		})
 	},
 	link: function () {
-		hashHistory.push("/signup")
+		browserHistory.push("/signup")
 	},
 	showEnd: function () {
-		hashHistory.push("/FinancePlan");
+		browserHistory.push("/FinancePlan");
 	},
 	render: function () {
 		return (

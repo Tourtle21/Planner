@@ -9,18 +9,18 @@ var source = require("vinyl-source-stream");
 var concat = require("gulp-concat");
 
 var config = {
-	port: 1921,
+	port: 9050,
 	devBaseUrl: "http://localhost",
 	paths: {
-		html: "./src/*.html",
-		js: "./src/**/*.js",
-		mainJs: "./src/main.js",
-		images: "./src/images/*",
+		html: "./client/src/*.html",
+		js: "./client/src/**/*.js",
+		mainJs: "./client/src/main.js",
+		images: "./client/src/images/*",
 		css: [
 			"node_modules/bootstrap/dist/css/bootstrap.min.css",
 			"node_modules/bootstrap/dist/css/bootstrap-theme.min.css",
 			"node_modules/toastr/build/toastr.css",
-			"./src/*.css"
+			"./client/src/*.css"
 		],
 		dist: './dist',
 	}
@@ -34,7 +34,7 @@ gulp.task("connect", function() {
 		livereload: true
 	});
 });
-gulp.task("open", ["connect"], function() {
+gulp.task("open", function() {
 	gulp.src("dist/index.html")
 		.pipe(open({uri: config.devBaseUrl + ":" + config.port + "/"}))
 })

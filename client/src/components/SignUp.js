@@ -1,7 +1,7 @@
 var React = require('react');
 var TextInput = require('./common/TextInput')
 var Link = require('react-router').Link;
-var hashHistory = require("react-router").hashHistory
+var browserHistory = require("react-router").browserHistory
 
 var SignUp = React.createClass({
 	getInitialState: function () {
@@ -27,10 +27,10 @@ var SignUp = React.createClass({
 		})
 	},
 	link: function () {
-		hashHistory.push("/signup")
+		browserHistory.push("/signup")
 	},
 	showEnd: function () {
-		hashHistory.push("/FinancePlan");
+		browserHistory.push("/FinancePlan");
 	},
 	render: function () {
 		return (
@@ -70,7 +70,7 @@ var SignUp = React.createClass({
 							error={this.state.errors.password}
 						/>
 					<hr />
-					<div className="divButton"><button className="btn btn-success" onClick={this.link} >Continue</button></div>
+					<div className="divButton"><button className="btn btn-success" onClick={this.showEnd} >Continue</button></div>
 				</div>
 			</div>
 		)
