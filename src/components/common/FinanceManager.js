@@ -10,10 +10,13 @@ var FinancePlan = React.createClass({
 	render: function () {
 		var amount = 0;
 
-		var createTodoRow = function (incomes) {
+		var createTodoRow = function (number, incomes) {
 			amount += incomes.amount
 			return (
-				<tr key={incomes.id}>
+				<tr key={incomes.id * (number + 1)}>
+					<td>
+						<button onClick={this.props.delete.bind(null, number, incomes.id)}>-</button>
+					</td>
 					<td> <TextInput
 						value={incomes.type}
 						name={this.props.name}
@@ -31,9 +34,9 @@ var FinancePlan = React.createClass({
 			);
 		}
 		if (this.props.title == "Income"){
-			var output = this.props.incomes.map(createTodoRow, this)
+			var output = this.props.incomes.map(createTodoRow.bind(this, 0), this)
 		} else {
-			var output = this.props.expenses.map(createTodoRow, this)
+			var output = this.props.expenses.map(createTodoRow.bind(this, 1), this)
 		}
 		return (
 			<div>

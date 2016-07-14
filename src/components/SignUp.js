@@ -35,36 +35,43 @@ var SignUp = React.createClass({
 	render: function () {
 		return (
 			<div>
-				<TextInput 
-					name="fname"
-					placeholder="First Name"
-					value={this.state.text.fname}
-					onChange={this.saveTodoState}
-					error={this.state.errors.fname}
-				/>
-				<TextInput 
-					name="lname"
-					placeholder="Last Name"
-					value={this.state.text.lname}
-					onChange={this.saveTodoState}
-					error={this.state.errors.lname}
-				/>
-				<TextInput 
-					name="email"
-					placeholder="Email"
-					value={this.state.text.email}
-					onChange={this.saveTodoState}
-					error={this.state.errors.email}
-				/>
-				<TextInput 
-					name="password"
-					placeholder="Password"
-					value={this.state.text.password}
-					onChange={this.saveTodoState}
-					error={this.state.errors.password}
-				/>
-				<hr />
-				<button onClick={this.showEnd}>&#10004;</button>
+				<div className="imgContainer"><img className="image" src="../images/moneylogo.png" alt="logo" /></div>
+					<div className="signupInputContainer">
+						<TextInput 
+							className="signUpInput"
+							name="fname"
+							placeholder="First Name"
+							value={this.state.text.fname}
+							onChange={this.saveTodoState}
+							error={this.state.errors.fname}
+						/>
+						<TextInput 
+							className="signUpInput"
+							name="lname"
+							placeholder="Last Name"
+							value={this.state.text.lname}
+							onChange={this.saveTodoState}
+							error={this.state.errors.lname}
+						/>
+						<TextInput 
+							className="signUpInput"
+							name="email"
+							placeholder="Email"
+							value={this.state.text.email}
+							onChange={this.saveTodoState}
+							error={this.state.errors.email}
+						/>
+						<TextInput 
+							className="signUpInput"
+							name="password"
+							placeholder="Password"
+							value={this.state.text.password}
+							onChange={this.saveTodoState}
+							error={this.state.errors.password}
+						/>
+					<hr />
+					<div className="divButton"><button className="btn btn-success" onClick={this.link} >Continue</button></div>
+				</div>
 			</div>
 		)
 	}

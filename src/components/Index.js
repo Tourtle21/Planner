@@ -33,24 +33,31 @@ var Index = React.createClass({
 	render: function () {
 		return (
 			<div>
-				<TextInput 
-					name="email"
-					placeholder="EMAIL"
-					value={this.state.text.email}
-					onChange={this.saveTodoState}
-					error={this.state.errors.email}
-				/>
-				<TextInput 
-					name="password"
-					placeholder="Password"
-					value={this.state.text.password}
-					onChange={this.saveTodoState}
-					error={this.state.errors.password}
-				/>
-				<hr />
-				<button onClick={this.link} >Sign Up</button>
-				<br />
-				<button onClick={this.showEnd} >&#10004;</button>
+
+				<div className="imgContainer"><img className="image" src="../images/moneylogo.png" alt="logo" /></div>
+					<div className="inputContainer">
+						<TextInput 
+							className="signInInput"
+							name="email"
+							placeholder="EMAIL"
+							value={this.state.text.email}
+							onChange={this.saveTodoState}
+							error={this.state.errors.email}
+						/>
+						<TextInput 
+							className="signInInput"
+							name="password"
+							placeholder="Password"
+							value={this.state.text.password}
+							onChange={this.saveTodoState}
+							error={this.state.errors.password}
+						/>
+						<div className="divButton"><button className="btn btn-success" onClick={this.showEnd} >Sign In</button></div>
+						{/*<button onClick={this.showEnd} >Sign In</button>*/}
+						<hr />
+						<div className="divButton"><button className="btn btn-success" onClick={this.link} >Sign Up</button></div>
+					</div>
+						
 			</div>
 		)
 	}

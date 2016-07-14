@@ -74,4 +74,4 @@ gulp.task("watch", function() {
 	gulp.watch(config.paths.css, ["css"]);
 });
 
-gulp.task("default", ["html", "css", "js", "open", "watch"])
+gulp.task("default", ["html", "css", "js", "images", "open", "watch"])

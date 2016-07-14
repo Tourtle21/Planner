@@ -101,6 +101,13 @@ Dispatcher.register(function (action, type) {
 		goal.months = action.months
 		goal.net = action.net
 		break;
+		case "delete":
+		_items[action.number].splice([action.id], 1)
+		for (var i = action.id; i < _items[action.number].length; i++) {
+			_items[action.number][i].id -= 1
+		}
+		break;
+		 
 		
 	}
 })

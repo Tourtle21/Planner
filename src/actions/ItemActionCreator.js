@@ -23,6 +23,13 @@ var ItemActionCreator = {
 			months: months,
 			net: net
 		})
+	},
+	deleteItem: function (number, id) {
+		Dispatcher.dispatch({
+			actionType: "delete",
+			number: number,
+			id: id
+		})
 	}	
 }
 

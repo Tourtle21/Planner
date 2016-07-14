@@ -67039,6 +67039,13 @@ var ItemActionCreator = {
 			months: months,
 			net: net
 		})
+	},
+	deleteItem: function (number, id) {
+		Dispatcher.dispatch({
+			actionType: "delete",
+			number: number,
+			id: id
+		})
 	}	
 }
 
@@ -67070,10 +67077,13 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 		var field = event.target.name;
 		var value = event.target.value;
 		var type = type;
-		if (field == "goal") {
-			console.log("hi")
+		console.log(type)
+		if (type == "amount") {
+			if (isNaN(value)) {
+				return
+			}
 		}
-		else if (field == "incomes") {
+		if (field == "incomes") {
 			var newText = this.state.incomes;
 			newText[id][type] = value;
 			ItemActionCreator.updateItem(newText[id], "income")
@@ -67085,9 +67095,9 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 			this.update()
 		}
 
-		
 
-		
+
+
 	},
 	update: function () {
 		var sum = 0;
@@ -67099,20 +67109,26 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 			expense += Number(this.state.expenses[i].amount)
 		}
 		this.setState({
-				totals: {
-				total:	sum,
-				diff: expense,
-				netIncome: sum - expense,
 				incomes: ItemStore.getAllIncomes(),
-				expenses: ItemStore.getAllExpenses()
+				expenses: ItemStore.getAllExpenses(),
+				totals: {
+					total:	sum,
+					diff: expense,
+					netIncome: sum - expense,
 			}
 		})
+	},
+	delete: function (number, id) {
+		ItemActionCreator.deleteItem(number, id)
+		this.update()
 	},
 	componentWillMount: function () {
 		this.setState({
 			incomes: ItemStore.getAllIncomes(),
 			expenses: ItemStore.getAllExpenses()
 		})
+	},
+	componentDidMount: function () {
 		this.update()
 	},
 	createNew: function (turn) {
@@ -67124,7 +67140,6 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 		this.update();
 	},
 	link: function () {
-		console.log()
 		ItemActionCreator.setGoal(document.getElementsByName("goal")[0].value, document.getElementsByTagName("select")[0].value, this.state.totals.netIncome)
 		hashHistory.push("/projections")
 	},
@@ -67148,7 +67163,8 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 					incomes: this.state.incomes, 
 					total: total, 
 					saveTodoState: this.saveTodoState, 
-					createNew: this.createNew}
+					createNew: this.createNew, 
+					delete: this.delete}
 				), 
 				React.createElement(FinanceManager, {
 					name: "expenses", 
@@ -67156,7 +67172,8 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 					expenses: this.state.expenses, 
 					total: difference, 
 					saveTodoState: this.saveTodoState, 
-					createNew: this.createNew}
+					createNew: this.createNew, 
+					delete: this.delete}
 				), 
 				React.createElement("div", null, " ", this.state.totals.netIncome, " "), 
 				React.createElement("button", {onClick: this.link}, "Calculate")
@@ -67203,24 +67220,31 @@ var Index = React.createClass({displayName: "Index",
 	render: function () {
 		return (
 			React.createElement("div", null, 
-				React.createElement(TextInput, {
-					name: "email", 
-					placeholder: "EMAIL", 
-					value: this.state.text.email, 
-					onChange: this.saveTodoState, 
-					error: this.state.errors.email}
-				), 
-				React.createElement(TextInput, {
-					name: "password", 
-					placeholder: "Password", 
-					value: this.state.text.password, 
-					onChange: this.saveTodoState, 
-					error: this.state.errors.password}
-				), 
-				React.createElement("hr", null), 
-				React.createElement("button", {onClick: this.link}, "Sign Up"), 
-				React.createElement("br", null), 
-				React.createElement("button", {onClick: this.showEnd}, "✔")
+
+				React.createElement("div", {className: "imgContainer"}, React.createElement("img", {className: "image", src: "../images/moneylogo.png", alt: "logo"})), 
+					React.createElement("div", {className: "inputContainer"}, 
+						React.createElement(TextInput, {
+							className: "signInInput", 
+							name: "email", 
+							placeholder: "EMAIL", 
+							value: this.state.text.email, 
+							onChange: this.saveTodoState, 
+							error: this.state.errors.email}
+						), 
+						React.createElement(TextInput, {
+							className: "signInInput", 
+							name: "password", 
+							placeholder: "Password", 
+							value: this.state.text.password, 
+							onChange: this.saveTodoState, 
+							error: this.state.errors.password}
+						), 
+						React.createElement("div", {className: "divButton"}, React.createElement("button", {className: "btn btn-success", onClick: this.showEnd}, "Sign In")), 
+						/*<button onClick={this.showEnd} >Sign In</button>*/
+						React.createElement("hr", null), 
+						React.createElement("div", {className: "divButton"}, React.createElement("button", {className: "btn btn-success", onClick: this.link}, "Sign Up"))
+					)
+						
 			)
 		)
 	}
@@ -67328,36 +67352,43 @@ var SignUp = React.createClass({displayName: "SignUp",
 	render: function () {
 		return (
 			React.createElement("div", null, 
-				React.createElement(TextInput, {
-					name: "fname", 
-					placeholder: "First Name", 
-					value: this.state.text.fname, 
-					onChange: this.saveTodoState, 
-					error: this.state.errors.fname}
-				), 
-				React.createElement(TextInput, {
-					name: "lname", 
-					placeholder: "Last Name", 
-					value: this.state.text.lname, 
-					onChange: this.saveTodoState, 
-					error: this.state.errors.lname}
-				), 
-				React.createElement(TextInput, {
-					name: "email", 
-					placeholder: "Email", 
-					value: this.state.text.email, 
-					onChange: this.saveTodoState, 
-					error: this.state.errors.email}
-				), 
-				React.createElement(TextInput, {
-					name: "password", 
-					placeholder: "Password", 
-					value: this.state.text.password, 
-					onChange: this.saveTodoState, 
-					error: this.state.errors.password}
-				), 
-				React.createElement("hr", null), 
-				React.createElement("button", {onClick: this.showEnd}, "✔")
+				React.createElement("div", {className: "imgContainer"}, React.createElement("img", {className: "image", src: "../images/moneylogo.png", alt: "logo"})), 
+					React.createElement("div", {className: "signupInputContainer"}, 
+						React.createElement(TextInput, {
+							className: "signUpInput", 
+							name: "fname", 
+							placeholder: "First Name", 
+							value: this.state.text.fname, 
+							onChange: this.saveTodoState, 
+							error: this.state.errors.fname}
+						), 
+						React.createElement(TextInput, {
+							className: "signUpInput", 
+							name: "lname", 
+							placeholder: "Last Name", 
+							value: this.state.text.lname, 
+							onChange: this.saveTodoState, 
+							error: this.state.errors.lname}
+						), 
+						React.createElement(TextInput, {
+							className: "signUpInput", 
+							name: "email", 
+							placeholder: "Email", 
+							value: this.state.text.email, 
+							onChange: this.saveTodoState, 
+							error: this.state.errors.email}
+						), 
+						React.createElement(TextInput, {
+							className: "signUpInput", 
+							name: "password", 
+							placeholder: "Password", 
+							value: this.state.text.password, 
+							onChange: this.saveTodoState, 
+							error: this.state.errors.password}
+						), 
+					React.createElement("hr", null), 
+					React.createElement("div", {className: "divButton"}, React.createElement("button", {className: "btn btn-success", onClick: this.link}, "Continue"))
+				)
 			)
 		)
 	}
@@ -67416,16 +67447,19 @@ var hashHistory = require("react-router").hashHistory
 var TextInput = require("./TextInput")
 var FinancePlan = React.createClass({displayName: "FinancePlan",
 
-	
+
 
 
 	render: function () {
 		var amount = 0;
 
-		var createTodoRow = function (incomes) {
+		var createTodoRow = function (number, incomes) {
 			amount += incomes.amount
 			return (
-				React.createElement("tr", {key: Math.random()}, 
+				React.createElement("tr", {key: incomes.id * (number + 1)}, 
+					React.createElement("td", null, 
+						React.createElement("button", {onClick: this.props.delete.bind(null, number, incomes.id)}, "-")
+					), 
 					React.createElement("td", null, " ", React.createElement(TextInput, {
 						value: incomes.type, 
 						name: this.props.name, 
@@ -67443,9 +67477,9 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 			);
 		}
 		if (this.props.title == "Income"){
-			var output = this.props.incomes.map(createTodoRow, this)
+			var output = this.props.incomes.map(createTodoRow.bind(this, 0), this)
 		} else {
-			var output = this.props.expenses.map(createTodoRow, this)
+			var output = this.props.expenses.map(createTodoRow.bind(this, 1), this)
 		}
 		return (
 			React.createElement("div", null, 
@@ -67466,7 +67500,7 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 				this.props.total
 			)
 
-			
+
 
 			)
 		)
@@ -67492,7 +67526,7 @@ var TextInput = React.createClass({displayName: "TextInput",
 		return (
 			React.createElement("div", {className: wrapperClass}, 
 				
-				React.createElement("div", {className: "field"}, 
+				React.createElement("div", {className: this.props.className}, 
 					React.createElement("input", {
 						name: this.props.name, 
 						className: "form-control", 
@@ -67664,6 +67698,13 @@ Dispatcher.register(function (action, type) {
 		goal.months = action.months
 		goal.net = action.net
 		break;
+		case "delete":
+		_items[action.number].splice([action.id], 1)
+		for (var i = action.id; i < _items[action.number].length; i++) {
+			_items[action.number][i].id -= 1
+		}
+		break;
+		 
 		
 	}
 })

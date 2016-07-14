@@ -64,6 +64,10 @@ var FinancePlan = React.createClass({
 			}
 		})
 	},
+	delete: function (number, id) {
+		ItemActionCreator.deleteItem(number, id)
+		this.update()
+	},
 	componentWillMount: function () {
 		this.setState({
 			incomes: ItemStore.getAllIncomes(),
@@ -106,6 +110,7 @@ var FinancePlan = React.createClass({
 					total= {total}
 					saveTodoState = {this.saveTodoState}
 					createNew = {this.createNew}
+					delete = {this.delete}
 				/>
 				<FinanceManager
 					name= "expenses"
@@ -114,6 +119,7 @@ var FinancePlan = React.createClass({
 					total= {difference}
 					saveTodoState = {this.saveTodoState}
 					createNew = {this.createNew}
+					delete = {this.delete}
 				/>
 				<div> {this.state.totals.netIncome} </div>
 				<button onClick={this.link}>Calculate</button>
