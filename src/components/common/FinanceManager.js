@@ -4,7 +4,7 @@ var hashHistory = require("react-router").hashHistory
 var TextInput = require("./TextInput")
 var FinancePlan = React.createClass({
 
-	
+
 
 
 	render: function () {
@@ -13,7 +13,7 @@ var FinancePlan = React.createClass({
 		var createTodoRow = function (incomes) {
 			amount += incomes.amount
 			return (
-				<tr key={Math.random()}>
+				<tr key={incomes.id}>
 					<td> <TextInput
 						value={incomes.type}
 						name={this.props.name}
@@ -25,7 +25,7 @@ var FinancePlan = React.createClass({
 							value={incomes.amount}
 							name={this.props.name}
 							onChange={this.props.saveTodoState.bind(null, incomes.id, "amount")}
-						/> 
+						/>
 					</td>
 				</tr>
 			);
@@ -54,7 +54,7 @@ var FinancePlan = React.createClass({
 				{this.props.total}
 			</div>
 
-			
+
 
 			</div>
 		)

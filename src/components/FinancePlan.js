@@ -23,10 +23,13 @@ var FinancePlan = React.createClass({
 		var field = event.target.name;
 		var value = event.target.value;
 		var type = type;
-		if (field == "goal") {
-			console.log("hi")
+		console.log(type)
+		if (type == "amount") {
+			if (isNaN(value)) {
+				return
+			}
 		}
-		else if (field == "incomes") {
+		if (field == "incomes") {
 			var newText = this.state.incomes;
 			newText[id][type] = value;
 			ItemActionCreator.updateItem(newText[id], "income")
@@ -38,9 +41,9 @@ var FinancePlan = React.createClass({
 			this.update()
 		}
 
-		
 
-		
+
+
 	},
 	update: function () {
 		var sum = 0;
@@ -52,12 +55,12 @@ var FinancePlan = React.createClass({
 			expense += Number(this.state.expenses[i].amount)
 		}
 		this.setState({
-				totals: {
-				total:	sum,
-				diff: expense,
-				netIncome: sum - expense,
 				incomes: ItemStore.getAllIncomes(),
-				expenses: ItemStore.getAllExpenses()
+				expenses: ItemStore.getAllExpenses(),
+				totals: {
+					total:	sum,
+					diff: expense,
+					netIncome: sum - expense,
 			}
 		})
 	},
@@ -66,6 +69,8 @@ var FinancePlan = React.createClass({
 			incomes: ItemStore.getAllIncomes(),
 			expenses: ItemStore.getAllExpenses()
 		})
+	},
+	componentDidMount: function () {
 		this.update()
 	},
 	createNew: function (turn) {
@@ -77,7 +82,6 @@ var FinancePlan = React.createClass({
 		this.update();
 	},
 	link: function () {
-		console.log()
 		ItemActionCreator.setGoal(document.getElementsByName("goal")[0].value, document.getElementsByTagName("select")[0].value, this.state.totals.netIncome)
 		hashHistory.push("/projections")
 	},
@@ -88,7 +92,7 @@ var FinancePlan = React.createClass({
 			<div>
 				<div>
 					How much would you like to save in <DropBox />
-					<TextInput 
+					<TextInput
 						name="goal"
 						placeholder='goal amount'
 						value={this.state.text}
