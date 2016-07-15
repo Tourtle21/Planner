@@ -3,6 +3,7 @@
 var Dispatcher = require("../dispatcher/Dispatcher")
 
 var ItemActionCreator = {
+
 	createItem: function (type) {
 		Dispatcher.dispatch({
 			actionType: "create",
@@ -24,13 +25,13 @@ var ItemActionCreator = {
 			net: net
 		})
 	},
-	deleteItem: function (number, id) {
+	deleteItem: function (number, id, name) {
 		Dispatcher.dispatch({
 			actionType: "delete",
 			number: number,
 			id: id
 		})
-	}	
+	}
 }
 
 module.exports = ItemActionCreator

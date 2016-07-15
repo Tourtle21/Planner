@@ -2,7 +2,7 @@ var React = require('react');
 var TextInput = require('./common/TextInput')
 var Link = require('react-router').Link;
 var browserHistory = require("react-router").browserHistory
-
+var UserActionCreator = require("../actions/UserActionCreator")
 var SignUp = React.createClass({
 	getInitialState: function () {
 		return {
@@ -31,13 +31,15 @@ var SignUp = React.createClass({
 	},
 	showEnd: function () {
 		browserHistory.push("/FinancePlan");
+		console.log(UserActionCreator)
+		UserActionCreator.createUser(this.state.text.email, this.state.text.password, this.state.text.fname + this.state.text.lname)
 	},
 	render: function () {
 		return (
 			<div>
 				<div className="imgContainer"><img className="image" src="../images/moneylogo.png" alt="logo" /></div>
 					<div className="signupInputContainer">
-						<TextInput 
+						<TextInput
 							className="signUpInput"
 							name="fname"
 							placeholder="First Name"
@@ -45,7 +47,7 @@ var SignUp = React.createClass({
 							onChange={this.saveTodoState}
 							error={this.state.errors.fname}
 						/>
-						<TextInput 
+						<TextInput
 							className="signUpInput"
 							name="lname"
 							placeholder="Last Name"
@@ -53,7 +55,7 @@ var SignUp = React.createClass({
 							onChange={this.saveTodoState}
 							error={this.state.errors.lname}
 						/>
-						<TextInput 
+						<TextInput
 							className="signUpInput"
 							name="email"
 							placeholder="Email"
@@ -61,7 +63,7 @@ var SignUp = React.createClass({
 							onChange={this.saveTodoState}
 							error={this.state.errors.email}
 						/>
-						<TextInput 
+						<TextInput
 							className="signUpInput"
 							name="password"
 							placeholder="Password"

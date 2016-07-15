@@ -6,7 +6,8 @@ module.exports = {
 	getAllMoney: getAllMoney,
 	createMoney: createMoney,
 	deleteMoney: deleteMoney,
-	updateMoney: updateMoney
+	updateMoney: updateMoney,
+	createUser: createUser
 }
 
 function getAllMoney () {
@@ -18,10 +19,10 @@ function getAllMoney () {
 }
 
 function createMoney (money) {
-	console.log('need to post');
 	var url = '/money';
-
-	return ajax(url);
+	var data = {};
+	var type = "POST"
+	return ajax(url, data, type);
 }
 
 function deleteMoney (money) {
@@ -38,4 +39,15 @@ function updateMoney (money) {
 	var type = 'PUT';
 
 	return ajax(url, data, type);
+}
+function createUser (email, password, name) {
+	var url = "/users"
+	var data = {
+		email: email,
+		password: password,
+		name: name
+	}
+	var type = "POST";
+
+	return ajax(url, data, type)
 }
