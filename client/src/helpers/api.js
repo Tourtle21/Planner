@@ -51,3 +51,10 @@ function createUser (email, password, name) {
 
 	return ajax(url, data, type)
 }
+function getAllUsers () {
+	var url = "/users"
+	var data = {}
+	var type = "GET";
+
+	return ajax(url, data, type)
+}

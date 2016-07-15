@@ -74,14 +74,12 @@ var ItemStore = Object.assign({}, EventEmitter.prototype, {
 Dispatcher.register(function (action, type) {
 	switch (action.actionType) {
 		case "create":
-		console.log(action.type)
-		console.log(_items[0])
 		_items[action.type].push({
 			id: _items[action.type].length,
 			type: "type",
 			amount: 0
 		})
-		
+
 		// ItemStore.emitChange();
 		break;
 		case "update":
@@ -107,8 +105,7 @@ Dispatcher.register(function (action, type) {
 			_items[action.number][i].id -= 1
 		}
 		break;
-		 
-		
+
 	}
 })
 

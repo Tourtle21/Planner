@@ -1,7 +1,8 @@
 var User = require('./model');
 
 module.exports = {
-	create: createUser
+	create: createUser,
+	get: getUsers
 };
 
 function createUser(req, res)
@@ -30,5 +31,14 @@ function reportError(err, res)
 	res.status(500).json
 			({
 				error: err.toString()
-			})	
+			})
+}
+function getUsers(req, res)
+{
+	User.find(function (err, collection)
+	{
+		if (err) return reportError(err, res)
+
+		res.json(collection)
+	})
 }

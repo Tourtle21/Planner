@@ -2,6 +2,7 @@
 
 var Dispatcher = require("../dispatcher/Dispatcher")
 var API = require("../helpers/api")
+var UserStore = require("../stores/userStore")
 
 var UserActionCreator = {
 
@@ -10,7 +11,23 @@ var UserActionCreator = {
 
 		newUserPromise
 			.then(function (newTodo) {
-				// Nothing
+				Dispatcher.dispatch({
+					actionType: "setId",
+					data: newTodo
+				})
+			})
+	},
+	getUsers: function () {
+		var usersPromise = API.getAllUsers();
+
+		usersPromise
+			.then(function (users) {
+				Dispatcher.dispatch({
+					actionType: "getUsers",
+					data: {
+						users: users
+					}
+				})
 			})
 	}
 }
