@@ -3,12 +3,14 @@ canvas {
     max-width: 400px;
     height: auto !important;
 }
+
 /*Index Page*/
 .inputContainer {
 	height: 275px;
 	width: 600px;
 	background-color: #8C8C8B;
 	margin: auto;
+	border-radius: 5px;
 }
 
 .image {
@@ -42,6 +44,10 @@ body {
 
 }
 
+hr{
+	width: 75%;
+}
+
 .signUpInput {
 	width:350px;
 	margin: auto;
@@ -54,7 +60,56 @@ body {
 	padding-top: 20px;
 	background-color: #8C8C8B;
 	margin: auto;
+	border-radius: 5px;
 }
+
+
+
+/* this is ross' entry from friday, july 15 */
+h1, th{
+	color: white;
+}
+
+#total{
+	color: white;
+}
+
+#goal{
+	background-color: green;
+	padding: 1%;
+	border-radius: 2px;
+	color: white;
+}
+
+#goal input{
+	width: 60%;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+#income{
+	margin-top: 1%;
+	background-color: green;
+	width: 50%;
+	padding: 1%;
+	float: left;
+	text-align: center
+}
+
+#expense{
+	margin-top: 1%;
+	background-color: green;
+	width: 50%;
+	float: right;
+	padding: 1%;
+	text-align: center
+}
+
+
+.clearall{
+	clear: all;
+}
+/* this is the end of Ross entry */
 
 
 

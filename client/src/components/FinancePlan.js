@@ -108,7 +108,8 @@ var FinancePlan = React.createClass({
 		var difference = this.state.totals.diff
 		return (
 			<div>
-				<div>
+				<div className="imgContainer"><img className="image" src="../images/moneylogo.png" alt="logo" /></div>
+				<div id="goal">
 					How much would you like to save in <DropBox />
 					<TextInput
 						name="goal"
@@ -117,25 +118,30 @@ var FinancePlan = React.createClass({
 						onChange={this.state.saveTodoState}
 					/>
 				</div>
-				<FinanceManager
-					name= "incomes"
-					title= "Income"
-					incomes= {this.state.incomes}
-					total= {total}
-					saveTodoState = {this.saveTodoState}
-					createNew = {this.createNew}
-					delete = {this.delete}
-				/>
-				<FinanceManager
-					name= "expenses"
-					title= "expenses"
-					expenses= {this.state.expenses}
-					total= {difference}
-					saveTodoState = {this.saveTodoState}
-					createNew = {this.createNew}
-					delete = {this.delete}
-				/>
-				<div> {this.state.totals.netIncome} </div>
+				<div id="income">
+					<FinanceManager
+						name= "incomes"
+						title= "Income"
+						incomes= {this.state.incomes}
+						total= {total}
+						saveTodoState = {this.saveTodoState}
+						createNew = {this.createNew}
+						delete = {this.delete}
+					/>
+				</div>
+				<div id="expense">
+					<FinanceManager
+						name= "expenses"
+						title= "expenses"
+						expenses= {this.state.expenses}
+						total= {difference}
+						saveTodoState = {this.saveTodoState}
+						createNew = {this.createNew}
+						delete = {this.delete}
+					/>
+				</div>
+				<div class="clearall"></div>
+				<div id="total"> {this.state.totals.netIncome} </div>
 				<button onClick={this.link}>Calculate</button>
 			</div>
 		)
