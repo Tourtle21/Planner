@@ -31,8 +31,7 @@ var SignUp = React.createClass({
 	},
 	showEnd: function () {
 		browserHistory.push("/FinancePlan");
-		console.log(UserActionCreator)
-		UserActionCreator.createUser(this.state.text.email, this.state.text.password, this.state.text.fname + this.state.text.lname)
+		UserActionCreator.createUser(this.state.text.email, this.state.text.password, this.state.text.fname + this.state.text.lname, true)
 	},
 	render: function () {
 		return (

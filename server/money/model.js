@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 
 var MoneySchema = new mongoose.Schema({
 	//user: {type: mongoose.Schema.Types.ObjectId, required: true, ref:'User'},
-	_id: {type: String, required: true},
+	id: {type: String, required: true},
 	data: {type: String, required: true},
 	updatedAt: Date
 });

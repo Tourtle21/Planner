@@ -10,17 +10,17 @@ module.exports = {
 	createUser: createUser
 }
 
-function getAllMoney () {
-	var url = '/moneys';
+
+function getAllMoney (_id) {
+	var url = '/money/' + _id;
 	var data = {};
 	var type = 'GET';
-
 	return ajax(url, data, type);
 }
 
-function createMoney (money) {
+function createMoney (money, id) {
 	var url = '/money';
-	var data = {};
+	var data = {data: JSON.stringify(money) , id: id};
 	var type = "POST"
 	return ajax(url, data, type);
 }

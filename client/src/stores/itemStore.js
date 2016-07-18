@@ -40,7 +40,7 @@ var _items = [
 				amount: 75
 			}]
 ]
-
+var item;
 var ItemStore = Object.assign({}, EventEmitter.prototype, {
 	// addChangeListener: function (callback) {
 	// 	this.on(CHANGE_EVENT, callback);
@@ -53,7 +53,9 @@ var ItemStore = Object.assign({}, EventEmitter.prototype, {
 	// emitChange: function () {
 	// 	this.emit(CHANGE_EVENT);
 	// },
-
+	getData: function () {
+		return _items;
+	},
 	getAllIncomes: function () {
 		return _items[0];
 	},
@@ -68,20 +70,28 @@ var ItemStore = Object.assign({}, EventEmitter.prototype, {
 	},
 	getNet: function () {
 		return goal.net;
+	},
+	getFullItem: function () {
+		return item;
 	}
 })
 
 Dispatcher.register(function (action, type) {
 	switch (action.actionType) {
 		case "create":
-		_items[action.type].push({
-			id: _items[action.type].length,
-			type: "type",
-			amount: 0
-		})
+		console.log(action.type)
+		if (!isNaN(action.type)) {
+			_items[action.type].push({
+				id: _items[action.type].length,
+				type: "type",
+				amount: 0
+			})
+		}
+		break;
+
 
 		// ItemStore.emitChange();
-		break;
+
 		case "update":
 		if (action.type == "income") {
 			var index = 0;
@@ -105,6 +115,9 @@ Dispatcher.register(function (action, type) {
 			_items[action.number][i].id -= 1
 		}
 		break;
+		case "initial":
+		_items = JSON.parse(action.item.data)
+		item = action.item
 
 	}
 })

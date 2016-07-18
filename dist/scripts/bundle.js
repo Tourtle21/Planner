@@ -1,22 +1,33 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var Dispatcher = require("../dispatcher/Dispatcher")
+var Dispatcher = require("../dispatcher/Dispatcher");
+var API = require("../helpers/api");
+var ItemStore = require("../stores/itemStore");
+var UserStore = require("../stores/userStore");
 
 var ItemActionCreator = {
 
 	createItem: function (type) {
-		Dispatcher.dispatch({
-			actionType: "create",
-			type: type
-		})
+		var newItemPromise = API.createMoney(type, UserStore.getId())
+		newItemPromise
+			.then(function (){
+				Dispatcher.dispatch({
+					actionType: "create",
+					type: type
+				})
+			})
 	},
 	updateItem: function (item, type) {
-		Dispatcher.dispatch({
-			actionType: "update",
-			item: item,
-			type: type
-		})
+		if (!type) {
+			API.updateMoney(item);
+		} else {
+			Dispatcher.dispatch({
+				actionType: "update",
+				item: item,
+				type: type
+			})
+		}
 	},
 	setGoal: function (goal, months, net) {
 		Dispatcher.dispatch({
@@ -32,12 +43,22 @@ var ItemActionCreator = {
 			number: number,
 			id: id
 		})
+	},
+	initialize: function (_id) {
+		var newItemPromise = API.getAllMoney(_id)
+		newItemPromise
+			.then(function (item){
+				Dispatcher.dispatch({
+					actionType: "initial",
+					item: item
+				})
+			})
 	}
 }
 
 module.exports = ItemActionCreator
 
-},{"../dispatcher/Dispatcher":11}],2:[function(require,module,exports){
+},{"../dispatcher/Dispatcher":11,"../helpers/api":13,"../stores/itemStore":16,"../stores/userStore":17}],2:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require("../dispatcher/Dispatcher")
@@ -46,16 +67,23 @@ var UserStore = require("../stores/userStore")
 
 var UserActionCreator = {
 
-	createUser: function (email, password) {
+	createUser: function (email, password, name, ifnew) {
 		var newUserPromise = API.createUser(email, password)
 
 		newUserPromise
 			.then(function (newTodo) {
 				Dispatcher.dispatch({
 					actionType: "setId",
-					data: newTodo
+					data: newTodo,
+					ifnew: ifnew
 				})
 			})
+	},
+	setifnew: function (ifnew) {
+		Dispatcher.dispatch({
+			actionType: "setifnew",
+			ifnew: ifnew
+		})
 	},
 	getUsers: function () {
 		var usersPromise = API.getAllUsers();
@@ -81,8 +109,12 @@ var browserHistory = require("react-router").browserHistory
 var FinanceManager = require('./common/FinanceManager')
 var ItemStore = require('../stores/itemStore')
 var ItemActionCreator = require('../actions/ItemActionCreator')
+var UserActionCreator = require('../actions/UserActionCreator')
 var DropBox = require("./common/DropBox")
 var TextInput = require("./common/TextInput")
+var API = require("../helpers/api")
+var UserStore = require("../stores/userStore");
+var times = 0;
 var FinancePlan = React.createClass({displayName: "FinancePlan",
 
 	getInitialState: function () {
@@ -100,7 +132,6 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 		var field = event.target.name;
 		var value = event.target.value;
 		var type = type;
-		console.log(type)
 		if (type == "amount") {
 			if (isNaN(value)) {
 				return
@@ -150,6 +181,7 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 			incomes: ItemStore.getAllIncomes(),
 			expenses: ItemStore.getAllExpenses()
 		})
+		console.log(ItemStore.getAllIncomes(), ItemStore.getAllExpenses())
 	},
 	componentDidMount: function () {
 		this.update()
@@ -164,6 +196,16 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 	},
 	link: function () {
 		ItemActionCreator.setGoal(document.getElementsByName("goal")[0].value, document.getElementsByTagName("select")[0].value, this.state.totals.netIncome)
+		var item = [this.state.incomes, this.state.expenses]
+	  if (UserStore.getifnew()) {
+			ItemActionCreator.createItem(item);
+			ItemActionCreator.initialize(UserStore.getId());
+		} else {
+			item = ItemStore.getFullItem();
+			console.log(item)
+			ItemActionCreator.updateItem(item);
+		}
+		UserActionCreator.setifnew(false)
 		browserHistory.push("/projections")
 	},
 	render: function () {
@@ -207,7 +249,7 @@ var FinancePlan = React.createClass({displayName: "FinancePlan",
 
 module.exports = FinancePlan;
 
-},{"../actions/ItemActionCreator":1,"../stores/itemStore":16,"./common/DropBox":8,"./common/FinanceManager":9,"./common/TextInput":10,"react":299,"react-router":98}],4:[function(require,module,exports){
+},{"../actions/ItemActionCreator":1,"../actions/UserActionCreator":2,"../helpers/api":13,"../stores/itemStore":16,"../stores/userStore":17,"./common/DropBox":8,"./common/FinanceManager":9,"./common/TextInput":10,"react":299,"react-router":98}],4:[function(require,module,exports){
 var React = require('react');
 var TextInput = require('./common/TextInput')
 var Link = require('react-router').Link;
@@ -371,8 +413,7 @@ var SignUp = React.createClass({displayName: "SignUp",
 	},
 	showEnd: function () {
 		browserHistory.push("/FinancePlan");
-		console.log(UserActionCreator)
-		UserActionCreator.createUser(this.state.text.email, this.state.text.password, this.state.text.fname + this.state.text.lname)
+		UserActionCreator.createUser(this.state.text.email, this.state.text.password, this.state.text.fname + this.state.text.lname, true)
 	},
 	render: function () {
 		return (
@@ -608,17 +649,17 @@ module.exports = {
 	createUser: createUser
 }
 
-function getAllMoney () {
-	var url = '/moneys';
+
+function getAllMoney (_id) {
+	var url = '/money/' + _id;
 	var data = {};
 	var type = 'GET';
-
 	return ajax(url, data, type);
 }
 
-function createMoney (money) {
+function createMoney (money, id) {
 	var url = '/money';
-	var data = {};
+	var data = {data: JSON.stringify(money) , id: id};
 	var type = "POST"
 	return ajax(url, data, type);
 }
@@ -743,7 +784,7 @@ var _items = [
 				amount: 75
 			}]
 ]
-
+var item;
 var ItemStore = Object.assign({}, EventEmitter.prototype, {
 	// addChangeListener: function (callback) {
 	// 	this.on(CHANGE_EVENT, callback);
@@ -756,7 +797,9 @@ var ItemStore = Object.assign({}, EventEmitter.prototype, {
 	// emitChange: function () {
 	// 	this.emit(CHANGE_EVENT);
 	// },
-
+	getData: function () {
+		return _items;
+	},
 	getAllIncomes: function () {
 		return _items[0];
 	},
@@ -771,20 +814,28 @@ var ItemStore = Object.assign({}, EventEmitter.prototype, {
 	},
 	getNet: function () {
 		return goal.net;
+	},
+	getFullItem: function () {
+		return item;
 	}
 })
 
 Dispatcher.register(function (action, type) {
 	switch (action.actionType) {
 		case "create":
-		_items[action.type].push({
-			id: _items[action.type].length,
-			type: "type",
-			amount: 0
-		})
+		console.log(action.type)
+		if (!isNaN(action.type)) {
+			_items[action.type].push({
+				id: _items[action.type].length,
+				type: "type",
+				amount: 0
+			})
+		}
+		break;
+
 
 		// ItemStore.emitChange();
-		break;
+
 		case "update":
 		if (action.type == "income") {
 			var index = 0;
@@ -808,6 +859,9 @@ Dispatcher.register(function (action, type) {
 			_items[action.number][i].id -= 1
 		}
 		break;
+		case "initial":
+		_items = JSON.parse(action.item.data)
+		item = action.item
 
 	}
 })
@@ -821,7 +875,7 @@ var Dispatcher = require('../dispatcher/Dispatcher')
 var EventEmitter = require('events');
 var _ = require('lodash');
 var _id = ""
-var _users = []
+var _user = []
 var UserStore = Object.assign({}, EventEmitter.prototype, {
 	// addChangeListener: function (callback) {
 	// 	this.on(CHANGE_EVENT, callback);
@@ -834,18 +888,26 @@ var UserStore = Object.assign({}, EventEmitter.prototype, {
 	// emitChange: function () {
 	// 	this.emit(CHANGE_EVENT);
 	// },
-
+getId: function () {
+	return _id[0]
+},
+getifnew: function () {
+	return _id[1]
+}
 
 })
 
 Dispatcher.register(function (action, type) {
 	switch (action.actionType) {
 		case "getUsers":
-    _users.push(action.data)
+    	_users.push(action.data)
     break;
     case "setId":
-    _id = action.data._id
+    	_id = [action.data._id, action.ifnew]
     break;
+		case "setifnew":
+			_id[1] = action.ifnew
+			break
 	}
 })
 

@@ -4,8 +4,12 @@ var browserHistory = require("react-router").browserHistory
 var FinanceManager = require('./common/FinanceManager')
 var ItemStore = require('../stores/itemStore')
 var ItemActionCreator = require('../actions/ItemActionCreator')
+var UserActionCreator = require('../actions/UserActionCreator')
 var DropBox = require("./common/DropBox")
 var TextInput = require("./common/TextInput")
+var API = require("../helpers/api")
+var UserStore = require("../stores/userStore");
+var times = 0;
 var FinancePlan = React.createClass({
 
 	getInitialState: function () {
@@ -23,7 +27,6 @@ var FinancePlan = React.createClass({
 		var field = event.target.name;
 		var value = event.target.value;
 		var type = type;
-		console.log(type)
 		if (type == "amount") {
 			if (isNaN(value)) {
 				return
@@ -73,6 +76,7 @@ var FinancePlan = React.createClass({
 			incomes: ItemStore.getAllIncomes(),
 			expenses: ItemStore.getAllExpenses()
 		})
+		console.log(ItemStore.getAllIncomes(), ItemStore.getAllExpenses())
 	},
 	componentDidMount: function () {
 		this.update()
@@ -87,6 +91,16 @@ var FinancePlan = React.createClass({
 	},
 	link: function () {
 		ItemActionCreator.setGoal(document.getElementsByName("goal")[0].value, document.getElementsByTagName("select")[0].value, this.state.totals.netIncome)
+		var item = [this.state.incomes, this.state.expenses]
+	  if (UserStore.getifnew()) {
+			ItemActionCreator.createItem(item);
+			ItemActionCreator.initialize(UserStore.getId());
+		} else {
+			item = ItemStore.getFullItem();
+			console.log(item)
+			ItemActionCreator.updateItem(item);
+		}
+		UserActionCreator.setifnew(false)
 		browserHistory.push("/projections")
 	},
 	render: function () {
